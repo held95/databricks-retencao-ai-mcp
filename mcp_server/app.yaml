@@ -1,0 +1,15 @@
+# Databricks App: mcp-telecom-retencao (servidor MCP customizado, Streamable HTTP em /mcp)
+command: ["python", "server.py"]
+env:
+  - name: DATABRICKS_WAREHOUSE_ID
+    valueFrom: sql-warehouse   # recurso declarado no app (CAN_USE no warehouse para o SP do app)
+  - name: UC_CATALOGO
+    value: workspace
+  - name: UC_SCHEMA
+    value: telecom_ai
+  - name: FILTRO_PIPELINE
+    value: retencao
+  - name: GENIE_SPACE_ID
+    valueFrom: genie-space     # recurso Genie space (CAN_RUN) — ferramenta perguntar_genie
+  - name: INDICE_POLITICAS
+    value: workspace.telecom_ai.politicas_index

@@ -1,0 +1,9 @@
+.databricks/
+.venv/
+__pycache__/
+*.pyc
+.env
+# dados sintéticos: gerados por data_gen/gerar_dados.py (seed 42)
+data_gen/output/
+# notas internas de trabalho
+BRIEF.md

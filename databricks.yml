@@ -1,0 +1,48 @@
+# Declarative Automation Bundle — Copiloto de Retenção Telecom (camada de dados)
+# Deploy:  databricks bundle deploy -t dev
+# Rodar :  databricks bundle run pipeline_retencao -t dev --full-refresh-all
+bundle:
+  name: retencao_ai_mcp
+
+sync:
+  paths:
+    - ./pipeline
+
+# Job diário (schedule PAUSED) que dispara o pipeline.
+include:
+  - resources/job_retencao_diario.yml
+
+variables:
+  catalogo:
+    default: workspace
+  schema:
+    default: telecom_ai
+
+targets:
+  dev:
+    default: true
+    workspace:
+      host: https://dbc-1d83b389-044f.cloud.databricks.com
+      root_path: /Workspace/Users/${workspace.current_user.userName}/retencao_ai_mcp/.bundle/${bundle.target}
+    presets:
+      pipelines_development: true   # modo desenvolvimento do pipeline (sem prefixo nos nomes)
+
+resources:
+  pipelines:
+    pipeline_retencao:
+      name: pipeline_retencao_telecom
+      catalog: ${var.catalogo}
+      schema: ${var.schema}
+      serverless: true
+      channel: CURRENT
+      photon: true
+      continuous: false
+      root_path: ./pipeline
+      libraries:
+        - glob:
+            include: ./pipeline/transformations/**
+      configuration:
+        projeto.data_referencia: "2026-09-30"
+      tags:
+        projeto: retencao_ai_mcp
+

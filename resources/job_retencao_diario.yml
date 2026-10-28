@@ -1,0 +1,17 @@
+# Job diário (schedule PAUSED) que dispara o pipeline declarativo.
+resources:
+  jobs:
+    job_retencao_diario:
+      name: job_retencao_diario
+      description: Atualização diária do medalhão de retenção (dispara o pipeline declarativo).
+      schedule:
+        quartz_cron_expression: "0 0 6 * * ?"
+        timezone_id: America/Sao_Paulo
+        pause_status: PAUSED
+      tasks:
+        - task_key: atualizar_medalhao
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.pipeline_retencao.id}
+            full_refresh: false
+      tags:
+        projeto: retencao_ai_mcp
